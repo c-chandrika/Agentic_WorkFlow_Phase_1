@@ -28,11 +28,12 @@ def run(topic, level, samples="", references=""):
 
         if not valid:
             print(f"Attempt {n}/{MAX_RETRIES}: validation failed - {result}")
+            Path(f"raw_failed_attempt_{n}.txt").write_text(raw)
             continue
 
         eval_result = llm_evaluate(result)
 
-        if (eval_result or "").strip() == "PASS":
+        if "PASS" in (eval_result or "").upper():            
             suffix = f" (attempt {n}/{MAX_RETRIES})" if n > 1 else ""
             print(f"Success!{suffix}")
             export_json(result)
@@ -41,7 +42,7 @@ def run(topic, level, samples="", references=""):
 
         print(f"Attempt {n}/{MAX_RETRIES}: eval failed - {eval_result}")
         export_json(result, filename=f"questions_failed_attempt_{n}.json")
-        eval_feedback = eval_result
+        eval_feedback = (eval_result or "")[:1000]  # limit size
 
     print("Failed after retries")
 
