@@ -1,17 +1,10 @@
-#!/usr/bin/env python3
-"""
-Decode LangGraph SQLite checkpoints into readable state (BLOBs are not plain JSON).
-
-Usage:
-  .venv/bin/python inspect_checkpoints.py --list-threads
-  .venv/bin/python inspect_checkpoints.py --thread-id my-run-1
-  .venv/bin/python inspect_checkpoints.py --thread-id my-run-1 --history 20 --json
-"""
+"""Decode LangGraph SQLite checkpoints (BLOBs require the graph + SqliteSaver to read)."""
 
 import argparse
 import json
 import sqlite3
 import sys
+from argparse import Namespace
 from pathlib import Path
 
 from langgraph.checkpoint.sqlite import SqliteSaver
@@ -32,7 +25,6 @@ def list_thread_ids(db_path: str) -> list[str]:
 
 
 def compact_values(values: dict | None) -> dict:
-    """Shrink large fields for terminal viewing."""
     if not values:
         return {}
     out: dict = {}
@@ -51,62 +43,30 @@ def compact_values(values: dict | None) -> dict:
     return out
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Inspect LangGraph checkpoint state (decoded, not raw SQLite BLOBs)."
-    )
-    parser.add_argument(
-        "--db",
-        default=CHECKPOINT_DB,
-        help=f"SQLite path (default: config CHECKPOINT_DB / env AGENTIC_CHECKPOINT_DB, else {CHECKPOINT_DB!r})",
-    )
-    parser.add_argument("--thread-id", metavar="ID", help="Thread to inspect")
-    parser.add_argument(
-        "--list-threads",
-        action="store_true",
-        help="Print distinct thread_id values in the DB and exit",
-    )
-    parser.add_argument(
-        "--history",
-        type=int,
-        metavar="N",
-        default=0,
-        help="Also print last N checkpoints (newest first); 0 = only latest",
-    )
-    parser.add_argument(
-        "--json",
-        action="store_true",
-        help="Print values as JSON (still compacts questions/raw_generation unless --full)",
-    )
-    parser.add_argument(
-        "--full",
-        action="store_true",
-        help="With --json, dump full state (large)",
-    )
-    args = parser.parse_args()
-    db_path = Path(args.db)
+def run_inspect(ns: Namespace) -> int:
+    db_path = Path(ns.db)
     if not db_path.is_file():
         print(f"No database file: {db_path.resolve()}", file=sys.stderr)
         return 1
 
-    if args.list_threads:
+    if ns.list_threads:
         for tid in list_thread_ids(str(db_path)):
             print(tid)
         return 0
 
-    if not args.thread_id:
+    if not ns.thread_id:
         print("Provide --thread-id ID or use --list-threads", file=sys.stderr)
         return 1
 
-    config = {"configurable": {"thread_id": args.thread_id}}
+    config = {"configurable": {"thread_id": ns.thread_id}}
 
     with SqliteSaver.from_conn_string(str(db_path)) as checkpointer:
         graph = build_graph(checkpointer)
         snap = graph.get_state(config)
 
-    if args.json:
+    if ns.json:
         vals = dict(snap.values) if snap.values else {}
-        if not args.full:
+        if not ns.full:
             if isinstance(vals.get("questions"), list):
                 vals = {**vals, "questions": f"<list len={len(vals['questions'])}>"}
             if isinstance(vals.get("raw_generation"), str) and len(vals["raw_generation"]) > 500:
@@ -116,27 +76,61 @@ def main() -> int:
         print("next:", list(snap.next))
         return 0
 
-    print("thread_id:", args.thread_id)
+    print("thread_id:", ns.thread_id)
     print("checkpoint:", snap.config.get("configurable", {}))
     print("next nodes:", snap.next)
     print("values (compact):")
     for k, v in compact_values(dict(snap.values) if snap.values else {}).items():
         print(f"  {k}: {v}")
 
-    if args.history > 0:
-        print(f"\n--- last {args.history} checkpoints (newest first) ---")
+    if ns.history > 0:
+        print(f"\n--- last {ns.history} checkpoints (newest first) ---")
         with SqliteSaver.from_conn_string(str(db_path)) as checkpointer:
             graph = build_graph(checkpointer)
-            for i, h in enumerate(graph.get_state_history(config, limit=args.history)):
+            for i, h in enumerate(graph.get_state_history(config, limit=ns.history)):
                 cfg = h.config.get("configurable", {})
                 cid = cfg.get("checkpoint_id", "?")
                 vals = compact_values(dict(h.values) if h.values else {})
                 term = vals.get("terminal", "")
                 att = vals.get("attempt_idx", "")
-                print(f"{i + 1}. checkpoint_id={cid} attempt_idx={att} terminal={term} keys={list(vals.keys())}")
+                print(
+                    f"{i + 1}. checkpoint_id={cid} attempt_idx={att} terminal={term} "
+                    f"keys={list(vals.keys())}"
+                )
 
     return 0
 
 
-if __name__ == "__main__":
-    raise SystemExit(main())
+def build_inspect_parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        description="Decode checkpoint state from the SQLite checkpointer (not raw BLOB hex).",
+    )
+    p.add_argument(
+        "--db",
+        default=CHECKPOINT_DB,
+        help=f"SQLite path (default: {CHECKPOINT_DB!r} from config / env).",
+    )
+    p.add_argument("--thread-id", metavar="ID", help="Thread to inspect")
+    p.add_argument(
+        "--list-threads",
+        action="store_true",
+        help="List distinct thread_id values and exit",
+    )
+    p.add_argument(
+        "--history",
+        type=int,
+        metavar="N",
+        default=0,
+        help="Show last N checkpoints (newest first); 0 = latest only",
+    )
+    p.add_argument(
+        "--json",
+        action="store_true",
+        help="Print values as JSON (truncated unless --full)",
+    )
+    p.add_argument(
+        "--full",
+        action="store_true",
+        help="With --json, dump full state (can be large)",
+    )
+    return p
