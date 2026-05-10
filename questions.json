@@ -1,132 +1,132 @@
 [
   {
-    "question": "If a matrix A has minimal polynomial m(t) = (t-2)^3(t-5)^2, what is the largest possible size of a Jordan block corresponding to eigenvalue 2 in its Jordan Canonical Form?",
+    "question": "In a city, 0.5% of the population has a certain rare disease. A diagnostic test has a sensitivity of 98% (correctly identifies diseased individuals) and a specificity of 95% (correctly identifies healthy individuals). If a randomly selected person tests positive, what is the probability that they actually have the disease?",
     "options": [
+      "0.0897",
+      "0.9800",
+      "0.0049",
+      "0.0500"
+    ],
+    "answer": "0.0897",
+    "explanation": "Using Bayes' Theorem: P(Disease|Positive) = [P(Positive|Disease) * P(Disease)] / [P(Positive|Disease) * P(Disease) + P(Positive|Healthy) * P(Healthy)]. P(D)=0.005, P(D')=0.995, P(Pos|D)=0.98, P(Pos|D')=1-0.95=0.05. So, (0.98*0.005) / (0.98*0.005 + 0.05*0.995) = 0.0049 / (0.0049 + 0.04975) = 0.0049 / 0.05465 ≈ 0.0897.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "A discrete random variable X has the following probability mass function (PMF): P(X=1) = 0.2, P(X=2) = 0.3, P(X=3) = 0.4, P(X=4) = 0.1. What is the expected value of X?",
+    "options": [
+      "2.4",
+      "2.5",
+      "2.0",
+      "1.0"
+    ],
+    "answer": "2.4",
+    "explanation": "The expected value E[X] is calculated as Σx * P(X=x). So, E[X] = (1*0.2) + (2*0.3) + (3*0.4) + (4*0.1) = 0.2 + 0.6 + 1.2 + 0.4 = 2.4.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "For the discrete random variable X with PMF: P(X=1) = 0.2, P(X=2) = 0.3, P(X=3) = 0.4, P(X=4) = 0.1, what is the variance of X?",
+    "options": [
+      "0.84",
+      "2.4",
+      "6.6",
+      "0.9165"
+    ],
+    "answer": "0.84",
+    "explanation": "First, E[X] = 2.4 (from previous question). Then, calculate E[X^2] = (1^2*0.2) + (2^2*0.3) + (3^2*0.4) + (4^2*0.1) = 0.2 + 1.2 + 3.6 + 1.6 = 6.6. Variance Var(X) = E[X^2] - (E[X])^2 = 6.6 - (2.4)^2 = 6.6 - 5.76 = 0.84.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "A continuous random variable X is uniformly distributed over the interval [2, 8]. What is the probability P(X > 5 | X > 3)?",
+    "options": [
+      "0.6",
+      "0.5",
+      "0.75",
+      "0.4"
+    ],
+    "answer": "0.6",
+    "explanation": "For a uniform distribution, P(X > 5 | X > 3) = P(X > 5 and X > 3) / P(X > 3) = P(X > 5) / P(X > 3). P(X > 5) = (8-5)/(8-2) = 3/6 = 0.5. P(X > 3) = (8-3)/(8-2) = 5/6. So, P(X > 5 | X > 3) = 0.5 / (5/6) = (1/2) * (6/5) = 3/5 = 0.6.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "The lifespan of a certain electronic component, in hours, follows an exponential distribution with a mean of 100 hours. If a component has already functioned for 50 hours, what is the probability that it will function for an additional 75 hours?",
+    "options": [
+      "e^(-0.75)",
+      "e^(-1.25)",
+      "e^(-0.5)",
+      "1 - e^(-0.75)"
+    ],
+    "answer": "e^(-0.75)",
+    "explanation": "For an exponential distribution, the mean is 1/λ, so λ = 1/100 = 0.01. The exponential distribution has the memoryless property: P(X > s+t | X > s) = P(X > t). Here, s=50 and t=75. So, we need P(X > 75) = e^(-λ * 75) = e^(-0.01 * 75) = e^(-0.75).",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "Consider two discrete random variables X and Y with the following joint probability mass function: P(X=0, Y=0) = 0.1, P(X=0, Y=1) = 0.2, P(X=1, Y=0) = 0.3, P(X=1, Y=1) = 0.4. Are X and Y independent?",
+    "options": [
+      "No, because P(X=0, Y=0) ≠ P(X=0) * P(Y=0).",
+      "Yes, because the sum of all joint probabilities is 1.",
+      "Yes, because P(X=0|Y=0) = P(X=0).",
+      "No, because P(X=1, Y=1) = 0.4."
+    ],
+    "answer": "No, because P(X=0, Y=0) ≠ P(X=0) * P(Y=0).",
+    "explanation": "For independence, P(X=x, Y=y) must equal P(X=x) * P(Y=y) for all x, y. Calculate marginals: P(X=0) = 0.1+0.2=0.3, P(Y=0) = 0.1+0.3=0.4. Then P(X=0)*P(Y=0) = 0.3*0.4 = 0.12. Since P(X=0, Y=0) = 0.1 ≠ 0.12, X and Y are not independent.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "An urn contains 6 red balls and 4 blue balls. A second urn contains 3 red balls and 7 blue balls. A fair coin is flipped. If it lands heads, a ball is drawn from the first urn. If it lands tails, a ball is drawn from the second urn. What is the probability that a red ball is drawn?",
+    "options": [
+      "0.45",
+      "0.6",
+      "0.3",
+      "0.5"
+    ],
+    "answer": "0.45",
+    "explanation": "Let R be the event of drawing a red ball, H for heads, T for tails. P(H)=0.5, P(T)=0.5. P(R|H) = 6/10 = 0.6. P(R|T) = 3/10 = 0.3. By the Law of Total Probability, P(R) = P(R|H)P(H) + P(R|T)P(T) = (0.6)(0.5) + (0.3)(0.5) = 0.3 + 0.15 = 0.45.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "Let X be a continuous random variable with probability density function f(x) = 2x for 0 < x < 1, and 0 otherwise. What is E[X^2]?",
+    "options": [
+      "0.5",
+      "0.75",
+      "0.3333",
+      "0.6667"
+    ],
+    "answer": "0.5",
+    "explanation": "E[X^2] is calculated by the integral of x^2 * f(x) over its domain. E[X^2] = ∫(from 0 to 1) x^2 * (2x) dx = ∫(from 0 to 1) 2x^3 dx = [2x^4/4] (from 0 to 1) = [x^4/2] (from 0 to 1) = (1^4/2) - (0^4/2) = 1/2 = 0.5.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "A biased coin lands on heads with a probability of 0.6. If the coin is flipped 5 times, what is the probability of getting exactly 3 heads?",
+    "options": [
+      "0.3456",
+      "0.2304",
+      "0.2592",
+      "0.4"
+    ],
+    "answer": "0.3456",
+    "explanation": "This is a binomial distribution problem with n=5 trials and p=0.6 probability of success (heads). The probability of k successes is P(X=k) = C(n, k) * p^k * (1-p)^(n-k). For k=3: P(X=3) = C(5, 3) * (0.6)^3 * (0.4)^2 = 10 * 0.216 * 0.16 = 0.3456.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "For what value of 'c' is the function f(x) = c(x^2 + 1) a valid probability density function for 0 < x < 1, and 0 otherwise?",
+    "options": [
+      "3/4",
+      "1/2",
       "1",
-      "2",
-      "3",
-      "5"
+      "2/3"
     ],
-    "answer": "3",
-    "explanation": "The exponent of (t-λ) in the minimal polynomial m(t) indicates the size of the largest Jordan block corresponding to the eigenvalue λ.",
-    "level": "L3",
-    "topic": "Linear Algebra"
-  },
-  {
-    "question": "For a linear operator T on a finite-dimensional complex inner product space V, which of the following is an equivalent condition for T to be normal?",
-    "options": [
-      "T is self-adjoint.",
-      "T is unitary.",
-      "There exists an orthonormal basis of V consisting of eigenvectors of T.",
-      "All eigenvalues of T are real."
-    ],
-    "answer": "There exists an orthonormal basis of V consisting of eigenvectors of T.",
-    "explanation": "The Spectral Theorem for Normal Operators states that an operator T on a finite-dimensional complex inner product space is normal if and only if there exists an orthonormal basis of V consisting of eigenvectors of T.",
-    "level": "L3",
-    "topic": "Linear Algebra"
-  },
-  {
-    "question": "Let A be an m x n real matrix with Singular Value Decomposition A = UΣVᵀ. Which of the following statements is true?",
-    "options": [
-      "The columns of U are eigenvectors of AᵀA.",
-      "The singular values of A are the square roots of the eigenvalues of AᵀA.",
-      "The matrix V is an m x m orthogonal matrix.",
-      "The rank of A is equal to the number of zero singular values."
-    ],
-    "answer": "The singular values of A are the square roots of the eigenvalues of AᵀA.",
-    "explanation": "The singular values of a matrix A are defined as the square roots of the eigenvalues of AᵀA (or AAᵀ). These eigenvalues are always non-negative.",
-    "level": "L3",
-    "topic": "Linear Algebra"
-  },
-  {
-    "question": "Let V be a finite-dimensional complex inner product space and T: V → V be a linear operator. Which of the following statements about its adjoint operator T* is FALSE?",
-    "options": [
-      "T** = T.",
-      "(cT)* = cT* for any scalar c ∈ ℂ.",
-      "(T+S)* = T* + S* for any other operator S: V → V.",
-      "If T is invertible, then (T⁻¹)* = (T*)⁻¹."
-    ],
-    "answer": "(cT)* = cT* for any scalar c ∈ ℂ.",
-    "explanation": "For a scalar c ∈ ℂ, the property of the adjoint operator is (cT)* = c̄T*, where c̄ is the complex conjugate of c, due to the definition of the inner product.",
-    "level": "L3",
-    "topic": "Linear Algebra"
-  },
-  {
-    "question": "Let V be a finite-dimensional vector space over a field F, and let W be a subspace of V. Which of the following statements about the quotient space V/W is true?",
-    "options": [
-      "dim(V/W) = dim(V) + dim(W).",
-      "The elements of V/W are vectors in V.",
-      "If v ∈ V, then v+W is an element of V/W.",
-      "V/W is isomorphic to W."
-    ],
-    "answer": "If v ∈ V, then v+W is an element of V/W.",
-    "explanation": "The elements of a quotient space V/W are cosets of the form v+W, where v ∈ V and W is the subspace.",
-    "level": "L3",
-    "topic": "Linear Algebra"
-  },
-  {
-    "question": "Let V be a vector space and P: V → V be a linear operator such that P² = P. Which of the following statements is true?",
-    "options": [
-      "P is always invertible.",
-      "The range of P is {0}.",
-      "V = Range(P) ⊕ Null(P).",
-      "P is always the identity operator."
-    ],
-    "answer": "V = Range(P) ⊕ Null(P).",
-    "explanation": "A linear operator P satisfying P²=P is called a projection. For such an operator, the vector space V can be decomposed into the direct sum of its range and null space, i.e., V = Range(P) ⊕ Null(P).",
-    "level": "L3",
-    "topic": "Linear Algebra"
-  },
-  {
-    "question": "Let A be a real symmetric n x n matrix. According to Sylvester's Law of Inertia, the number of positive, negative, and zero eigenvalues (counting multiplicities) of A is invariant under which of the following transformations?",
-    "options": [
-      "Similarity transformation P⁻¹AP for any invertible matrix P.",
-      "Congruence transformation PᵀAP for any invertible matrix P.",
-      "Orthogonal similarity transformation QᵀAQ for any orthogonal matrix Q.",
-      "Any transformation that preserves the determinant of A."
-    ],
-    "answer": "Congruence transformation PᵀAP for any invertible matrix P.",
-    "explanation": "Sylvester's Law of Inertia states that for a real symmetric matrix A, the number of positive, negative, and zero eigenvalues (the 'signature' or 'inertia') is invariant under congruence transformations (PᵀAP).",
-    "level": "L3",
-    "topic": "Linear Algebra"
-  },
-  {
-    "question": "Let A be an n x n matrix with characteristic polynomial p(t) = (t-1)³(t-2)². Which of the following cannot be the minimal polynomial m(t) of A?",
-    "options": [
-      "m(t) = (t-1)(t-2)",
-      "m(t) = (t-1)²(t-2)²",
-      "m(t) = (t-1)³(t-2)",
-      "m(t) = (t-1)⁴(t-2)"
-    ],
-    "answer": "m(t) = (t-1)⁴(t-2)",
-    "explanation": "The minimal polynomial m(t) of a matrix A must divide its characteristic polynomial p(t). This implies that all roots of m(t) must be roots of p(t), and the multiplicity of each root in m(t) cannot exceed its multiplicity in p(t). Here, the exponent of (t-1) in the option (t-1)⁴(t-2) is 4, which is greater than 3, its exponent in p(t).",
-    "level": "L3",
-    "topic": "Linear Algebra"
-  },
-  {
-    "question": "Let V and W be finite-dimensional vector spaces over a field F, with dim(V) = n and dim(W) = m. Which of the following statements about their tensor product V ⊗ W is true?",
-    "options": [
-      "The dimension of V ⊗ W is n+m.",
-      "If {v₁, ..., vₙ} is a basis for V and {w₁, ..., wₘ} is a basis for W, then {vᵢ ⊗ wⱼ | 1 ≤ i ≤ n, 1 ≤ j ≤ m} is a basis for V ⊗ W.",
-      "Every element in V ⊗ W can be written as v ⊗ w for some v ∈ V and w ∈ W.",
-      "V ⊗ W is always isomorphic to Hom(V, W)."
-    ],
-    "answer": "If {v₁, ..., vₙ} is a basis for V and {w₁, ..., wₘ} is a basis for W, then {vᵢ ⊗ wⱼ | 1 ≤ i ≤ n, 1 ≤ j ≤ m} is a basis for V ⊗ W.",
-    "explanation": "If {v₁, ..., vₙ} is a basis for V and {w₁, ..., wₘ} is a basis for W, then the set of elementary tensors {vᵢ ⊗ wⱼ} forms a basis for the tensor product space V ⊗ W. The dimension of V ⊗ W is therefore nm.",
-    "level": "L3",
-    "topic": "Linear Algebra"
-  },
-  {
-    "question": "Let A be an n x n complex matrix. The matrix exponential eᴬ is defined by the power series eᴬ = Σ(k=0 to ∞) (Aᵏ/k!). Which of the following properties is generally FALSE?",
-    "options": [
-      "e^(A+B) = eᴬ eᴮ if A and B commute (AB=BA).",
-      "e^(PAP⁻¹) = Peᴬ P⁻¹ for any invertible matrix P.",
-      "eᴬ is always invertible, and its inverse is e⁻ᴬ.",
-      "e^(A+B) = eᴬ eᴮ for any n x n matrices A and B."
-    ],
-    "answer": "e^(A+B) = eᴬ eᴮ for any n x n matrices A and B.",
-    "explanation": "The property e^(A+B) = eᴬ eᴮ for matrices is only true if the matrices A and B commute (i.e., AB=BA). In general, for non-commuting matrices, this equality does not hold.",
-    "level": "L3",
-    "topic": "Linear Algebra"
+    "answer": "3/4",
+    "explanation": "For f(x) to be a valid PDF, the integral of f(x) over its entire domain must equal 1. ∫(from 0 to 1) c(x^2 + 1) dx = 1. c * [∫(from 0 to 1) (x^2 + 1) dx] = 1. c * [(x^3/3 + x) (from 0 to 1)] = 1. c * [(1/3 + 1) - (0)] = 1. c * (4/3) = 1. Therefore, c = 3/4.",
+    "level": "L2",
+    "topic": "Probability"
   }
 ]

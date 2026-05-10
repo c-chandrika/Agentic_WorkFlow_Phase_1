@@ -11,6 +11,55 @@ Small Python pipeline that generates **10 multiple-choice questions** for a give
 
 Up to **`MAX_RETRIES` (2)** full attempts. If attempt 1 fails evaluation, the failure text is passed into attempt 2 as **`eval_feedback`** (lower temperature on that retry). Failed-eval batches are saved as `questions_failed_attempt_<n>.json` for inspection.
 
+## Architecture
+
+The codebase is a **small linear pipeline** with one orchestrator and clear separation between **LLM calls**, **deterministic validation**, and **file output**.
+
+| Layer | Modules | Responsibility |
+|-------|---------|----------------|
+| Entry / orchestration | `main.py` | CLI, reads optional sample/reference files, runs the **generate → validate → evaluate** loop up to `MAX_RETRIES`, carries **`eval_feedback`** between attempts, writes `raw_failed_attempt_<n>.txt` when validation fails. |
+| Configuration | `config.py` | Loads `.env`, exposes model id, retry count, and temperatures (used by `generator.py` and `evaluator.py`). |
+| Generation (LLM) | `generator.py`, `prompts.py` | Builds the user prompt via `build_prompt` in `prompts.py`, calls Gemini with JSON response mode, returns raw model text. |
+| Validation (no I/O) | `validator.py` | Extracts and parses the JSON array, enforces schema and consistency rules; returns a Python list of dicts or an error message. |
+| Evaluation (LLM) | `evaluator.py` | Sends the validated batch to Gemini with an inline rubric; expects structured JSON with **PASS** / **FAIL** semantics. |
+| Export | `exporter.py` | Writes successful batches to `questions.json` and `questions.csv`. |
+
+**Dependency direction:** `main` → `generator`, `validator`, `evaluator`, `exporter`; `generator` → `config`, `prompts`; `evaluator` → `config`. `validator` and `exporter` depend only on the standard library (plus their own logic).
+
+```mermaid
+flowchart LR
+  subgraph entry [Entry]
+    CLI[main.py]
+  end
+  subgraph loop [Per attempt]
+    G[generator.py]
+    V[validator.py]
+    E[evaluator.py]
+  end
+  subgraph apis [Gemini API]
+    G1[Generation]
+    G2[Evaluation]
+  end
+  subgraph out [Outputs]
+    J[questions.json]
+    C[questions.csv]
+    F[questions_failed_attempt_n.json]
+    R[raw_failed_attempt_n.txt]
+  end
+  CLI --> G
+  G --> G1
+  G --> V
+  V -->|invalid| R
+  V -->|valid list| E
+  E --> G2
+  G2 -->|PASS| X[exporter.py]
+  X --> J
+  X --> C
+  G2 -->|FAIL| F
+```
+
+On **FAIL**, `main.py` saves `questions_failed_attempt_<n>.json`, stores a truncated copy of the evaluator message in **`eval_feedback`**, and starts the next attempt (if any). Validation failures skip evaluation and only write **`raw_failed_attempt_<n>.txt`**.
+
 ## Requirements
 
 - Python **3.10+** (tested with 3.12)

@@ -5,6 +5,7 @@ import re
 import google.generativeai as genai
 
 from config import GEMINI_MODEL
+from observability import log_gemini_usage
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 model = genai.GenerativeModel(GEMINI_MODEL)
@@ -21,7 +22,7 @@ def _extract_json_object(text: str) -> str | None:
     return None
 
 
-def llm_evaluate(questions):
+def llm_evaluate(questions, attempt_idx=None):
     payload = json.dumps(questions, ensure_ascii=False, indent=2)
     prompt = f"""
 Evaluate these MCQs.
@@ -50,6 +51,12 @@ MCQs (JSON array):
 {payload}
 """
     res = model.generate_content(prompt)
+    log_gemini_usage(
+        call="llm_evaluate",
+        response=res,
+        attempt_idx=attempt_idx,
+        node="evaluate",
+    )
     text = (res.text or "").strip()
     if not text:
         fb = getattr(res, "prompt_feedback", None)

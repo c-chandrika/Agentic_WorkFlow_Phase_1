@@ -1,52 +1,16 @@
 import argparse
 from pathlib import Path
 
-from config import MAX_RETRIES
-from generator import generate_questions
-from validator import validate_questions
-from evaluator import llm_evaluate
-from exporter import export_csv, export_json
+from observability import configure_logging
+from workflow_graph import run_workflow
 
 
 def _read_text_file(path: str) -> str:
     return Path(path).read_text(encoding="utf-8")
 
 
-def run(topic, level, samples="", references=""):
-    eval_feedback = ""
-    for attempt in range(MAX_RETRIES):
-        n = attempt + 1
-        raw = generate_questions(
-            topic,
-            level,
-            samples=samples,
-            references=references,
-            eval_feedback=eval_feedback,
-        )
-
-        valid, result = validate_questions(raw, expected_level=level)
-
-        if not valid:
-            print(f"Attempt {n}/{MAX_RETRIES}: validation failed - {result}")
-            Path(f"raw_failed_attempt_{n}.txt").write_text(raw)
-            continue
-
-        eval_result = llm_evaluate(result)
-
-        if "PASS" in (eval_result or "").upper():            
-            suffix = f" (attempt {n}/{MAX_RETRIES})" if n > 1 else ""
-            print(f"Success!{suffix}")
-            export_json(result)
-            export_csv(result)
-            return
-
-        print(f"Attempt {n}/{MAX_RETRIES}: eval failed - {eval_result}")
-        export_json(result, filename=f"questions_failed_attempt_{n}.json")
-        eval_feedback = (eval_result or "")[:1000]  # limit size
-
-    print("Failed after retries")
-
 if __name__ == "__main__":
+    configure_logging()
     parser = argparse.ArgumentParser(
         description="Generate MCQs (JSON + CSV) using topic, level, optional samples/references."
     )
@@ -79,4 +43,4 @@ if __name__ == "__main__":
     references = (
         _read_text_file(args.references_file) if args.references_file else args.references
     )
-    run(args.topic, args.level, samples=samples, references=references)
+    run_workflow(args.topic, args.level, samples=samples, references=references)

@@ -3,6 +3,7 @@ import os
 import google.generativeai as genai
 
 from config import GEMINI_MODEL, TEMPERATURE, TEMPERATURE_WITH_FEEDBACK
+from observability import log_gemini_usage
 from prompts import build_prompt
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
@@ -10,7 +11,14 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 model = genai.GenerativeModel(GEMINI_MODEL)
 
 
-def generate_questions(topic, level, samples="", references="", eval_feedback=""):
+def generate_questions(
+    topic,
+    level,
+    samples="",
+    references="",
+    eval_feedback="",
+    attempt_idx=None,
+):
     prompt = build_prompt(topic, level, samples, references, eval_feedback=eval_feedback)
     temp = (
         TEMPERATURE_WITH_FEEDBACK if eval_feedback.strip() else TEMPERATURE
@@ -24,4 +32,10 @@ def generate_questions(topic, level, samples="", references="", eval_feedback=""
         ),
     )
 
+    log_gemini_usage(
+        call="generate_questions",
+        response=response,
+        attempt_idx=attempt_idx,
+        node="generate",
+    )
     return response.text
