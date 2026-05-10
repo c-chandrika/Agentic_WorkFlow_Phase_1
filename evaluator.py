@@ -5,7 +5,7 @@ import re
 import google.generativeai as genai
 
 from config import GEMINI_MODEL
-from observability import log_gemini_usage
+from observability import extract_gemini_usage_deltas, log_gemini_usage
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 model = genai.GenerativeModel(GEMINI_MODEL)
@@ -22,7 +22,7 @@ def _extract_json_object(text: str) -> str | None:
     return None
 
 
-def llm_evaluate(questions, attempt_idx=None):
+def llm_evaluate(questions, attempt_idx=None) -> tuple[str, dict[str, int]]:
     payload = json.dumps(questions, ensure_ascii=False, indent=2)
     prompt = f"""
 Evaluate these MCQs.
@@ -51,6 +51,7 @@ MCQs (JSON array):
 {payload}
 """
     res = model.generate_content(prompt)
+    deltas = extract_gemini_usage_deltas(res)
     log_gemini_usage(
         call="llm_evaluate",
         response=res,
@@ -60,21 +61,21 @@ MCQs (JSON array):
     text = (res.text or "").strip()
     if not text:
         fb = getattr(res, "prompt_feedback", None)
-        return f"FAIL: empty model response; prompt_feedback={fb}"
+        return f"FAIL: empty model response; prompt_feedback={fb}", deltas
 
     blob = _extract_json_object(text)
     if blob:
         try:
             data = json.loads(blob)
         except json.JSONDecodeError:
-            return text
+            return text, deltas
         status = (data.get("status") or "").strip().upper()
         issues = data.get("issues") or []
         if status == "PASS":
-            return "PASS"
+            return "PASS", deltas
         if status == "FAIL":
-            return "FAIL: " + "; ".join(str(i) for i in issues)
+            return "FAIL: " + "; ".join(str(i) for i in issues), deltas
     first = (text.split(None, 1)[0] if text else "").upper()
     if first == "PASS":
-        return "PASS"
-    return text
+        return "PASS", deltas
+    return text, deltas

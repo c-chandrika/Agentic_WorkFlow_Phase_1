@@ -3,7 +3,7 @@ import os
 import google.generativeai as genai
 
 from config import GEMINI_MODEL, TEMPERATURE, TEMPERATURE_WITH_FEEDBACK
-from observability import log_gemini_usage
+from observability import extract_gemini_usage_deltas, log_gemini_usage
 from prompts import build_prompt
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
@@ -38,4 +38,4 @@ def generate_questions(
         attempt_idx=attempt_idx,
         node="generate",
     )
-    return response.text
+    return response.text, extract_gemini_usage_deltas(response)

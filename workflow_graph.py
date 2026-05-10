@@ -1,15 +1,18 @@
 """LangGraph state machine: generate → validate → evaluate → export with retries."""
 
+import operator
+import uuid
 from pathlib import Path
-from typing import Literal, TypedDict
+from typing import Annotated, Literal, TypedDict
 
+from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, START, StateGraph
 
-from config import MAX_RETRIES
+from config import CHECKPOINT_DB, MAX_RETRIES
 from evaluator import llm_evaluate
 from exporter import export_csv, export_json
 from generator import generate_questions
-from observability import traced_node
+from observability import log_event, traced_node
 from validator import validate_questions
 
 
@@ -26,11 +29,24 @@ class WorkflowState(TypedDict, total=False):
     questions: list
     eval_result: str
     terminal: Literal["success", "failed"]
+    usage_prompt_tokens: Annotated[int, operator.add]
+    usage_candidates_tokens: Annotated[int, operator.add]
+    usage_total_tokens: Annotated[int, operator.add]
+    usage_cached_tokens: Annotated[int, operator.add]
+
+
+def _run_token_summary_fields(state: WorkflowState) -> dict:
+    return {
+        "usage_prompt_tokens": state.get("usage_prompt_tokens", 0),
+        "usage_candidates_tokens": state.get("usage_candidates_tokens", 0),
+        "usage_total_tokens": state.get("usage_total_tokens", 0),
+        "usage_cached_tokens": state.get("usage_cached_tokens", 0),
+    }
 
 
 @traced_node("generate")
 def node_generate(state: WorkflowState) -> dict:
-    raw = generate_questions(
+    raw, usage_deltas = generate_questions(
         state["topic"],
         state["level"],
         samples=state.get("samples") or "",
@@ -38,7 +54,9 @@ def node_generate(state: WorkflowState) -> dict:
         eval_feedback=state.get("eval_feedback") or "",
         attempt_idx=state.get("attempt_idx"),
     )
-    return {"raw_generation": raw}
+    out: dict = {"raw_generation": raw}
+    out.update(usage_deltas)
+    return out
 
 
 @traced_node("validate")
@@ -75,8 +93,9 @@ def node_bump_after_validate(state: WorkflowState) -> dict:
 def node_evaluate(state: WorkflowState) -> dict:
     qs = state["questions"]
     n = state["attempt_idx"] + 1
-    eval_result = llm_evaluate(qs, attempt_idx=state.get("attempt_idx"))
+    eval_result, usage_deltas = llm_evaluate(qs, attempt_idx=state.get("attempt_idx"))
     updates: dict = {"eval_result": eval_result}
+    updates.update(usage_deltas)
     er = eval_result or ""
     if "PASS" not in er.upper():
         print(f"Attempt {n}/{MAX_RETRIES}: eval failed - {eval_result}")
@@ -99,7 +118,7 @@ def route_after_evaluate(state: WorkflowState) -> str:
 def node_bump_after_eval(state: WorkflowState) -> dict:
     return {"attempt_idx": state["attempt_idx"] + 1}
 
-]
+
 @traced_node("export")
 def node_export(state: WorkflowState) -> dict:
     n = state["attempt_idx"] + 1
@@ -111,11 +130,12 @@ def node_export(state: WorkflowState) -> dict:
     return {"terminal": "success"}
 
 
+@traced_node("finish_failed")
 def node_finish_failed(_state: WorkflowState) -> dict:
     return {"terminal": "failed"}
 
 
-def build_graph():
+def build_graph(checkpointer=None):
     g = StateGraph(WorkflowState)
     g.add_node("generate", node_generate)
     g.add_node("validate", node_validate)
@@ -149,7 +169,7 @@ def build_graph():
     g.add_edge("bump_after_eval", "generate")
     g.add_edge("export", END)
     g.add_edge("finish_failed", END)
-    return g.compile()
+    return g.compile(checkpointer=checkpointer)
 
 
 def run_workflow(
@@ -157,8 +177,11 @@ def run_workflow(
     level: str,
     samples: str = "",
     references: str = "",
+    *,
+    checkpoint_db: str | None = CHECKPOINT_DB,
+    thread_id: str | None = None,
 ) -> WorkflowState:
-    graph = build_graph()
+    tid = thread_id or uuid.uuid4().hex
     initial: WorkflowState = {
         "topic": topic,
         "level": level,
@@ -166,5 +189,26 @@ def run_workflow(
         "references": references,
         "attempt_idx": 0,
         "eval_feedback": "",
+        "usage_prompt_tokens": 0,
+        "usage_candidates_tokens": 0,
+        "usage_total_tokens": 0,
+        "usage_cached_tokens": 0,
     }
-    return graph.invoke(initial)
+    config = {"configurable": {"thread_id": tid}}
+
+    if checkpoint_db:
+        with SqliteSaver.from_conn_string(checkpoint_db) as checkpointer:
+            graph = build_graph(checkpointer)
+            final = graph.invoke(initial, config)
+    else:
+        graph = build_graph(checkpointer=None)
+        final = graph.invoke(initial, config)
+
+    log_event(
+        "run_token_summary",
+        terminal=final.get("terminal", "unknown"),
+        thread_id=tid,
+        checkpoint_db=checkpoint_db or "",
+        **_run_token_summary_fields(final),
+    )
+    return final

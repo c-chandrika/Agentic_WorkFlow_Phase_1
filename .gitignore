@@ -5,6 +5,9 @@
 .venv/
 venv/
 
+# LangGraph checkpoints (default path; add other DB names if you use --checkpoint-db)
+workflow_checkpoints.sqlite
+
 # Python
 __pycache__/
 *.py[cod]

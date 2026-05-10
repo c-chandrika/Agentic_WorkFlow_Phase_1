@@ -33,6 +33,25 @@ def log_event(event: str, **fields: Any) -> None:
     logger.info(" ".join(str(p) for p in parts))
 
 
+def extract_gemini_usage_deltas(response: Any) -> dict[str, int]:
+    """Map Gemini ``usage_metadata`` into graph state fields (for ``operator.add`` reducers)."""
+    um = getattr(response, "usage_metadata", None)
+    if um is None:
+        return {}
+    pairs = (
+        ("usage_prompt_tokens", "prompt_token_count"),
+        ("usage_candidates_tokens", "candidates_token_count"),
+        ("usage_total_tokens", "total_token_count"),
+        ("usage_cached_tokens", "cached_content_token_count"),
+    )
+    deltas: dict[str, int] = {}
+    for state_key, attr in pairs:
+        val = getattr(um, attr, None)
+        if val is not None:
+            deltas[state_key] = int(val)
+    return deltas
+
+
 def log_gemini_usage(
     *,
     call: str,
@@ -41,24 +60,24 @@ def log_gemini_usage(
     node: str | None = None,
 ) -> None:
     """Log token counts from a Gemini ``generate_content`` response (if the API returns them)."""
-    um = getattr(response, "usage_metadata", None)
+    deltas = extract_gemini_usage_deltas(response)
     fields: dict[str, Any] = {"call": call}
     if node is not None:
         fields["node"] = node
     if attempt_idx is not None:
         fields["attempt_idx"] = attempt_idx
-    if um is None:
+    log_keys = (
+        ("usage_prompt_tokens", "prompt_token_count"),
+        ("usage_candidates_tokens", "candidates_token_count"),
+        ("usage_total_tokens", "total_token_count"),
+        ("usage_cached_tokens", "cached_content_token_count"),
+    )
+    for state_key, log_key in log_keys:
+        if state_key in deltas:
+            fields[log_key] = deltas[state_key]
+    if not deltas and getattr(response, "usage_metadata", None) is None:
         log_event("llm_usage", **fields, note="no_usage_metadata")
         return
-    for name in (
-        "prompt_token_count",
-        "candidates_token_count",
-        "total_token_count",
-        "cached_content_token_count",
-    ):
-        val = getattr(um, name, None)
-        if val is not None:
-            fields[name] = int(val)
     log_event("llm_usage", **fields)
 
 

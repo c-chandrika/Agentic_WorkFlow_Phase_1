@@ -1,131 +1,131 @@
 [
   {
-    "question": "In a city, 0.5% of the population has a certain rare disease. A diagnostic test has a sensitivity of 98% (correctly identifies diseased individuals) and a specificity of 95% (correctly identifies healthy individuals). If a randomly selected person tests positive, what is the probability that they actually have the disease?",
+    "question": "A rare disease affects 1 in 1000 people. A diagnostic test for the disease has a 99% true positive rate (sensitivity) and a 2% false positive rate. If a randomly selected person tests positive, what is the probability they actually have the disease?",
     "options": [
-      "0.0897",
-      "0.9800",
-      "0.0049",
-      "0.0500"
+      "0.047",
+      "0.0099",
+      "0.99",
+      "0.0198"
     ],
-    "answer": "0.0897",
-    "explanation": "Using Bayes' Theorem: P(Disease|Positive) = [P(Positive|Disease) * P(Disease)] / [P(Positive|Disease) * P(Disease) + P(Positive|Healthy) * P(Healthy)]. P(D)=0.005, P(D')=0.995, P(Pos|D)=0.98, P(Pos|D')=1-0.95=0.05. So, (0.98*0.005) / (0.98*0.005 + 0.05*0.995) = 0.0049 / (0.0049 + 0.04975) = 0.0049 / 0.05465 ≈ 0.0897.",
+    "answer": "0.047",
+    "explanation": "Using Bayes' Theorem: P(Disease|Positive) = [P(Positive|Disease) * P(Disease)] / [P(Positive|Disease) * P(Disease) + P(Positive|No Disease) * P(No Disease)]. This is (0.99 * 0.001) / (0.99 * 0.001 + 0.02 * 0.999) = 0.00099 / (0.00099 + 0.01998) = 0.00099 / 0.02097 ≈ 0.047.",
     "level": "L2",
     "topic": "Probability"
   },
   {
-    "question": "A discrete random variable X has the following probability mass function (PMF): P(X=1) = 0.2, P(X=2) = 0.3, P(X=3) = 0.4, P(X=4) = 0.1. What is the expected value of X?",
+    "question": "A discrete random variable X has the probability mass function P(X=k) = c * (1/3)^k for k=1, 2, 3, ... What is the expected value of X?",
     "options": [
-      "2.4",
-      "2.5",
-      "2.0",
-      "1.0"
+      "1.5",
+      "2",
+      "3",
+      "0.5"
     ],
-    "answer": "2.4",
-    "explanation": "The expected value E[X] is calculated as Σx * P(X=x). So, E[X] = (1*0.2) + (2*0.3) + (3*0.4) + (4*0.1) = 0.2 + 0.6 + 1.2 + 0.4 = 2.4.",
+    "answer": "1.5",
+    "explanation": "First, find c by summing P(X=k) to 1: c * ∑(1/3)^k = c * ( (1/3) / (1 - 1/3) ) = c * (1/2) = 1, so c=2. Thus P(X=k) = 2 * (1/3)^k. This is the PMF for a Geometric distribution with p=2/3 (number of trials until first success, starting at k=1). The expected value for such a distribution is 1/p = 1 / (2/3) = 1.5.",
     "level": "L2",
     "topic": "Probability"
   },
   {
-    "question": "For the discrete random variable X with PMF: P(X=1) = 0.2, P(X=2) = 0.3, P(X=3) = 0.4, P(X=4) = 0.1, what is the variance of X?",
+    "question": "Let X be a discrete random variable with P(X=0) = 0.2, P(X=1) = 0.5, P(X=2) = 0.3. Calculate Var(X).",
     "options": [
-      "0.84",
-      "2.4",
-      "6.6",
-      "0.9165"
+      "0.49",
+      "1.1",
+      "1.7",
+      "0.7"
     ],
-    "answer": "0.84",
-    "explanation": "First, E[X] = 2.4 (from previous question). Then, calculate E[X^2] = (1^2*0.2) + (2^2*0.3) + (3^2*0.4) + (4^2*0.1) = 0.2 + 1.2 + 3.6 + 1.6 = 6.6. Variance Var(X) = E[X^2] - (E[X])^2 = 6.6 - (2.4)^2 = 6.6 - 5.76 = 0.84.",
+    "answer": "0.49",
+    "explanation": "First, calculate E[X] = (0*0.2) + (1*0.5) + (2*0.3) = 0 + 0.5 + 0.6 = 1.1. Next, calculate E[X^2] = (0^2*0.2) + (1^2*0.5) + (2^2*0.3) = 0 + 0.5 + 1.2 = 1.7. Finally, Var(X) = E[X^2] - (E[X])^2 = 1.7 - (1.1)^2 = 1.7 - 1.21 = 0.49.",
     "level": "L2",
     "topic": "Probability"
   },
   {
-    "question": "A continuous random variable X is uniformly distributed over the interval [2, 8]. What is the probability P(X > 5 | X > 3)?",
+    "question": "A continuous random variable X has the probability density function f(x) = cx for 0 ≤ x ≤ 2, and 0 otherwise. Find the probability P(X > 1.5).",
     "options": [
-      "0.6",
+      "0.4375",
       "0.5",
-      "0.75",
-      "0.4"
+      "0.25",
+      "0.75"
     ],
-    "answer": "0.6",
-    "explanation": "For a uniform distribution, P(X > 5 | X > 3) = P(X > 5 and X > 3) / P(X > 3) = P(X > 5) / P(X > 3). P(X > 5) = (8-5)/(8-2) = 3/6 = 0.5. P(X > 3) = (8-3)/(8-2) = 5/6. So, P(X > 5 | X > 3) = 0.5 / (5/6) = (1/2) * (6/5) = 3/5 = 0.6.",
+    "answer": "0.4375",
+    "explanation": "First, find c by integrating f(x) from 0 to 2 and setting it to 1: ∫(cx)dx from 0 to 2 = [cx^2/2] from 0 to 2 = c(2^2/2) - 0 = 2c = 1, so c=1/2. Thus f(x) = x/2. Now, P(X > 1.5) = ∫(x/2)dx from 1.5 to 2 = [x^2/4] from 1.5 to 2 = (2^2/4) - (1.5^2/4) = 1 - (2.25/4) = 1 - 0.5625 = 0.4375.",
     "level": "L2",
     "topic": "Probability"
   },
   {
-    "question": "The lifespan of a certain electronic component, in hours, follows an exponential distribution with a mean of 100 hours. If a component has already functioned for 50 hours, what is the probability that it will function for an additional 75 hours?",
+    "question": "Let X and Y be discrete random variables with the following joint PMF: P(X=0, Y=0) = 0.1, P(X=0, Y=1) = 0.2, P(X=1, Y=0) = 0.3, P(X=1, Y=1) = 0.4. Are X and Y independent?",
+    "options": [
+      "No, because P(X=0, Y=0) is not equal to P(X=0)P(Y=0).",
+      "Yes, because the sum of all joint probabilities is 1.",
+      "Yes, because P(X=0, Y=1) + P(X=1, Y=0) = P(X=0) + P(Y=0).",
+      "No, because the marginal probabilities are not all equal."
+    ],
+    "answer": "No, because P(X=0, Y=0) is not equal to P(X=0)P(Y=0).",
+    "explanation": "For independence, P(X=x, Y=y) must equal P(X=x)P(Y=y) for all x,y. Calculate marginals: P(X=0) = 0.1+0.2 = 0.3, P(Y=0) = 0.1+0.3 = 0.4. Then P(X=0)P(Y=0) = 0.3 * 0.4 = 0.12. Since P(X=0, Y=0) = 0.1 ≠ 0.12, X and Y are not independent.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "Let X and Y be continuous random variables with joint PDF f(x,y) = 2 for 0 < x < y < 1, and 0 otherwise. Calculate Cov(X,Y).",
+    "options": [
+      "1/36",
+      "1/4",
+      "1/3",
+      "2/9"
+    ],
+    "answer": "1/36",
+    "explanation": "First, E[X]=1/3, E[Y]=2/3. E[XY] = ∫ from 0 to 1 ∫ from 0 to y (2xy dx dy) = ∫ from 0 to 1 [x^2y] from 0 to y dy = ∫ from 0 to 1 (y^3 dy) = [y^4/4] from 0 to 1 = 1/4. Cov(X,Y) = E[XY] - E[X]E[Y] = 1/4 - (1/3)(2/3) = 1/4 - 2/9 = (9-8)/36 = 1/36.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "If the moment generating function of a random variable X is M_X(t) = (0.4e^t + 0.6)^3, what is the variance of X?",
+    "options": [
+      "0.72",
+      "1.2",
+      "0.48",
+      "1.8"
+    ],
+    "answer": "0.72",
+    "explanation": "The given MGF M_X(t) = (0.4e^t + 0.6)^3 is the MGF of a Binomial distribution with parameters n=3 and p=0.4. For a Binomial(n,p) distribution, the variance is given by Var(X) = np(1-p). Therefore, Var(X) = 3 * 0.4 * (1 - 0.4) = 3 * 0.4 * 0.6 = 0.72.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "A biased coin has a probability of landing heads equal to 0.3. The coin is flipped repeatedly until the first head appears. What is the probability that the first head occurs on an even-numbered flip?",
+    "options": [
+      "7/17",
+      "3/10",
+      "7/10",
+      "3/7"
+    ],
+    "answer": "7/17",
+    "explanation": "Let X be the number of flips until the first head. X follows a Geometric distribution with p=0.3. P(X=k) = (0.7)^(k-1) * 0.3. We want P(X is even) = P(X=2) + P(X=4) + P(X=6) + ... = (0.7^1 * 0.3) + (0.7^3 * 0.3) + (0.7^5 * 0.3) + ... This is a geometric series with first term a = 0.7 * 0.3 = 0.21 and common ratio r = 0.7^2 = 0.49. The sum is a / (1-r) = 0.21 / (1 - 0.49) = 0.21 / 0.51 = 21/51 = 7/17.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "Calls arrive at a call center at an average rate of 5 calls per minute. Assuming a Poisson process, what is the probability that exactly 3 calls arrive in a 30-second interval?",
+    "options": [
+      "(2.5^3 * e^-2.5) / 3!",
+      "(5^3 * e^-5) / 3!",
+      "(2.5^3 * e^-2.5) / 5!",
+      "(5^3 * e^-5) / 5!"
+    ],
+    "answer": "(2.5^3 * e^-2.5) / 3!",
+    "explanation": "The average rate for a Poisson process is λ. Given λ = 5 calls/minute. For a 30-second interval (0.5 minutes), the new rate λ' = 5 * 0.5 = 2.5 calls. The probability of exactly k events in a Poisson distribution is P(X=k) = (λ'^k * e^{-λ'}) / k!. So, for k=3 and λ'=2.5, P(X=3) = (2.5^3 * e^-2.5) / 3!.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "The lifetime of a certain electronic component follows an exponential distribution with a mean lifetime of 200 hours. If a component has already lasted for 100 hours, what is the probability that it will last for at least another 150 hours?",
     "options": [
       "e^(-0.75)",
       "e^(-1.25)",
       "e^(-0.5)",
-      "1 - e^(-0.75)"
+      "e^(-1.0)"
     ],
     "answer": "e^(-0.75)",
-    "explanation": "For an exponential distribution, the mean is 1/λ, so λ = 1/100 = 0.01. The exponential distribution has the memoryless property: P(X > s+t | X > s) = P(X > t). Here, s=50 and t=75. So, we need P(X > 75) = e^(-λ * 75) = e^(-0.01 * 75) = e^(-0.75).",
-    "level": "L2",
-    "topic": "Probability"
-  },
-  {
-    "question": "Consider two discrete random variables X and Y with the following joint probability mass function: P(X=0, Y=0) = 0.1, P(X=0, Y=1) = 0.2, P(X=1, Y=0) = 0.3, P(X=1, Y=1) = 0.4. Are X and Y independent?",
-    "options": [
-      "No, because P(X=0, Y=0) ≠ P(X=0) * P(Y=0).",
-      "Yes, because the sum of all joint probabilities is 1.",
-      "Yes, because P(X=0|Y=0) = P(X=0).",
-      "No, because P(X=1, Y=1) = 0.4."
-    ],
-    "answer": "No, because P(X=0, Y=0) ≠ P(X=0) * P(Y=0).",
-    "explanation": "For independence, P(X=x, Y=y) must equal P(X=x) * P(Y=y) for all x, y. Calculate marginals: P(X=0) = 0.1+0.2=0.3, P(Y=0) = 0.1+0.3=0.4. Then P(X=0)*P(Y=0) = 0.3*0.4 = 0.12. Since P(X=0, Y=0) = 0.1 ≠ 0.12, X and Y are not independent.",
-    "level": "L2",
-    "topic": "Probability"
-  },
-  {
-    "question": "An urn contains 6 red balls and 4 blue balls. A second urn contains 3 red balls and 7 blue balls. A fair coin is flipped. If it lands heads, a ball is drawn from the first urn. If it lands tails, a ball is drawn from the second urn. What is the probability that a red ball is drawn?",
-    "options": [
-      "0.45",
-      "0.6",
-      "0.3",
-      "0.5"
-    ],
-    "answer": "0.45",
-    "explanation": "Let R be the event of drawing a red ball, H for heads, T for tails. P(H)=0.5, P(T)=0.5. P(R|H) = 6/10 = 0.6. P(R|T) = 3/10 = 0.3. By the Law of Total Probability, P(R) = P(R|H)P(H) + P(R|T)P(T) = (0.6)(0.5) + (0.3)(0.5) = 0.3 + 0.15 = 0.45.",
-    "level": "L2",
-    "topic": "Probability"
-  },
-  {
-    "question": "Let X be a continuous random variable with probability density function f(x) = 2x for 0 < x < 1, and 0 otherwise. What is E[X^2]?",
-    "options": [
-      "0.5",
-      "0.75",
-      "0.3333",
-      "0.6667"
-    ],
-    "answer": "0.5",
-    "explanation": "E[X^2] is calculated by the integral of x^2 * f(x) over its domain. E[X^2] = ∫(from 0 to 1) x^2 * (2x) dx = ∫(from 0 to 1) 2x^3 dx = [2x^4/4] (from 0 to 1) = [x^4/2] (from 0 to 1) = (1^4/2) - (0^4/2) = 1/2 = 0.5.",
-    "level": "L2",
-    "topic": "Probability"
-  },
-  {
-    "question": "A biased coin lands on heads with a probability of 0.6. If the coin is flipped 5 times, what is the probability of getting exactly 3 heads?",
-    "options": [
-      "0.3456",
-      "0.2304",
-      "0.2592",
-      "0.4"
-    ],
-    "answer": "0.3456",
-    "explanation": "This is a binomial distribution problem with n=5 trials and p=0.6 probability of success (heads). The probability of k successes is P(X=k) = C(n, k) * p^k * (1-p)^(n-k). For k=3: P(X=3) = C(5, 3) * (0.6)^3 * (0.4)^2 = 10 * 0.216 * 0.16 = 0.3456.",
-    "level": "L2",
-    "topic": "Probability"
-  },
-  {
-    "question": "For what value of 'c' is the function f(x) = c(x^2 + 1) a valid probability density function for 0 < x < 1, and 0 otherwise?",
-    "options": [
-      "3/4",
-      "1/2",
-      "1",
-      "2/3"
-    ],
-    "answer": "3/4",
-    "explanation": "For f(x) to be a valid PDF, the integral of f(x) over its entire domain must equal 1. ∫(from 0 to 1) c(x^2 + 1) dx = 1. c * [∫(from 0 to 1) (x^2 + 1) dx] = 1. c * [(x^3/3 + x) (from 0 to 1)] = 1. c * [(1/3 + 1) - (0)] = 1. c * (4/3) = 1. Therefore, c = 3/4.",
+    "explanation": "For an exponential distribution, the mean lifetime is 1/λ. So, 1/λ = 200 hours, which means λ = 1/200. Exponential distributions possess the memoryless property, meaning P(X > s+t | X > s) = P(X > t). Here, s=100 hours and t=150 hours. So, the probability is P(X > 150) = e^{-λ*150} = e^{-(1/200)*150} = e^{-150/200} = e^{-3/4} = e^{-0.75}.",
     "level": "L2",
     "topic": "Probability"
   }

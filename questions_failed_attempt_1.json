@@ -1,0 +1,132 @@
+[
+  {
+    "question": "A rare disease affects 0.1% of the population. A diagnostic test for the disease has a sensitivity of 99% (correctly identifies sick people) and a specificity of 98% (correctly identifies healthy people). If a person tests positive, what is the probability that they actually have the disease?",
+    "options": [
+      "Approximately 0.0472",
+      "0.99",
+      "0.001",
+      "Approximately 0.0199"
+    ],
+    "answer": "Approximately 0.0472",
+    "explanation": "Let D be the event that a person has the disease and T+ be the event that they test positive. We are given P(D) = 0.001, P(T+|D) = 0.99, and P(T-|D^c) = 0.98. From this, P(D^c) = 1 - 0.001 = 0.999 and P(T+|D^c) = 1 - P(T-|D^c) = 1 - 0.98 = 0.02. Using Bayes' Theorem: P(D|T+) = [P(T+|D) * P(D)] / [P(T+|D) * P(D) + P(T+|D^c) * P(D^c)] = (0.99 * 0.001) / (0.99 * 0.001 + 0.02 * 0.999) = 0.00099 / (0.00099 + 0.01998) = 0.00099 / 0.02097 ≈ 0.0472.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "A game involves rolling a fair six-sided die. If you roll a 6, you win $10. If you roll a 5, you win $5. For any other roll, you lose $2. What is the expected net gain from playing this game?",
+    "options": [
+      "$7/6",
+      "$1.50",
+      "$0",
+      "$-2/6"
+    ],
+    "answer": "$7/6",
+    "explanation": "Let X be the net gain. The possible outcomes and their probabilities are: X=10 with P(X=10)=1/6 (rolling a 6); X=5 with P(X=5)=1/6 (rolling a 5); X=-2 with P(X=-2)=4/6 (rolling 1, 2, 3, or 4). The expected net gain E[X] = (10 * 1/6) + (5 * 1/6) + (-2 * 4/6) = (10 + 5 - 8) / 6 = 7/6.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "A discrete random variable X has the following probability mass function (PMF): P(X=1)=0.2, P(X=2)=0.5, P(X=3)=0.3. Calculate the variance of X, Var(X).",
+    "options": [
+      "0.49",
+      "2.1",
+      "4.9",
+      "0.7"
+    ],
+    "answer": "0.49",
+    "explanation": "First, calculate the expected value E[X] = (1 * 0.2) + (2 * 0.5) + (3 * 0.3) = 0.2 + 1.0 + 0.9 = 2.1. Next, calculate E[X^2] = (1^2 * 0.2) + (2^2 * 0.5) + (3^2 * 0.3) = (1 * 0.2) + (4 * 0.5) + (9 * 0.3) = 0.2 + 2.0 + 2.7 = 4.9. Finally, Var(X) = E[X^2] - (E[X])^2 = 4.9 - (2.1)^2 = 4.9 - 4.41 = 0.49.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "A bus arrives at a stop at a random time between 8:00 AM and 8:15 AM, with the arrival time being uniformly distributed. If a person arrives at the bus stop at 8:05 AM, what is the probability that they will have to wait more than 5 minutes for the bus?",
+    "options": [
+      "1/3",
+      "1/4",
+      "1/2",
+      "2/3"
+    ],
+    "answer": "1/3",
+    "explanation": "The bus arrival time X is uniformly distributed over the interval [8:00, 8:15], which has a length of 15 minutes. A person arriving at 8:05 AM will have to wait more than 5 minutes if the bus arrives after 8:05 + 5 minutes = 8:10 AM. So, we are looking for the probability P(X > 8:10 AM). The favorable interval for bus arrival is (8:10 AM, 8:15 AM], which has a length of 5 minutes. The probability is the ratio of the length of the favorable interval to the length of the total interval: 5 minutes / 15 minutes = 1/3.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "The lifetime of a certain electronic component follows an exponential distribution with a mean lifetime of 500 hours. What is the probability that a component will last longer than 750 hours?",
+    "options": [
+      "e^(-1.5)",
+      "e^(-0.5)",
+      "1 - e^(-1.5)",
+      "1 - e^(-0.5)"
+    ],
+    "answer": "e^(-1.5)",
+    "explanation": "For an exponential distribution, the mean lifetime is 1/λ. Given the mean is 500 hours, λ = 1/500. The probability that a component lasts longer than t hours is P(X > t) = e^(-λt). Substituting t = 750 and λ = 1/500, we get P(X > 750) = e^(-(1/500)*750) = e^(-750/500) = e^(-1.5).",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "A fair coin is tossed 10 times. What is the probability of getting exactly 7 heads?",
+    "options": [
+      "15/128",
+      "1/2",
+      "7/10",
+      "1/10"
+    ],
+    "answer": "15/128",
+    "explanation": "This is a binomial distribution problem with n=10 trials and p=0.5 (probability of getting a head). We want to find P(X=7). The formula is P(X=k) = C(n,k) * p^k * (1-p)^(n-k). So, P(X=7) = C(10,7) * (0.5)^7 * (0.5)^(10-7) = C(10,7) * (0.5)^10. C(10,7) = 10! / (7! * 3!) = (10*9*8) / (3*2*1) = 120. And (0.5)^10 = 1/1024. Therefore, P(X=7) = 120 * (1/1024) = 120/1024. Simplifying this fraction by dividing by 8: 120/8 = 15, and 1024/8 = 128. So, the probability is 15/128.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "On average, 3 customers arrive at a service desk per hour. Assuming a Poisson process, what is the probability that exactly 2 customers arrive in a given 30-minute period?",
+    "options": [
+      "1.125 * e^(-1.5)",
+      "3^2 * e^(-3) / 2!",
+      "e^(-1.5)",
+      "1.5 * e^(-1.5)"
+    ],
+    "answer": "1.125 * e^(-1.5)",
+    "explanation": "For a Poisson process, if the average rate is λ per unit time, then for a different time interval T, the new rate λ' = λ * T. Here, λ = 3 customers/hour. For a 30-minute period (0.5 hours), the average number of arrivals is λ' = 3 * 0.5 = 1.5. The probability of exactly k events in a Poisson distribution is P(X=k) = (λ'^k * e^(-λ')) / k!. So, for k=2 and λ'=1.5, P(X=2) = (1.5^2 * e^(-1.5)) / 2! = (2.25 * e^(-1.5)) / 2 = 1.125 * e^(-1.5).",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "Consider two discrete random variables X and Y with the following joint probability mass function: P(X=1, Y=1) = 0.2, P(X=1, Y=2) = 0.3, P(X=2, Y=1) = 0.1, P(X=2, Y=2) = 0.4. Are X and Y independent?",
+    "options": [
+      "No, because P(X=1, Y=1) does not equal P(X=1)P(Y=1)",
+      "Yes, because P(X=1, Y=1) + P(X=1, Y=2) + P(X=2, Y=1) + P(X=2, Y=2) = 1",
+      "Yes, because P(X=1) + P(X=2) = 1 and P(Y=1) + P(Y=2) = 1",
+      "No, because P(X=1|Y=1) does not equal P(X=1)"
+    ],
+    "answer": "No, because P(X=1, Y=1) does not equal P(X=1)P(Y=1)",
+    "explanation": "For two random variables X and Y to be independent, their joint probability must equal the product of their marginal probabilities for all possible values of X and Y, i.e., P(X=x, Y=y) = P(X=x)P(Y=y). First, calculate the marginal probabilities: P(X=1) = P(X=1, Y=1) + P(X=1, Y=2) = 0.2 + 0.3 = 0.5. P(Y=1) = P(X=1, Y=1) + P(X=2, Y=1) = 0.2 + 0.1 = 0.3. Now check the independence condition for (X=1, Y=1): P(X=1, Y=1) = 0.2. P(X=1)P(Y=1) = 0.5 * 0.3 = 0.15. Since 0.2 ≠ 0.15, X and Y are not independent.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "In a certain population, 60% are male and 40% are female. 5% of males are colorblind, and 0.25% of females are colorblind. What is the overall probability that a randomly chosen person from this population is colorblind?",
+    "options": [
+      "0.031",
+      "0.0525",
+      "0.03",
+      "0.001"
+    ],
+    "answer": "0.031",
+    "explanation": "Let M be the event that a person is male, F be the event that a person is female, and C be the event that a person is colorblind. We are given P(M) = 0.60, P(F) = 0.40, P(C|M) = 0.05, and P(C|F) = 0.0025. Using the Law of Total Probability: P(C) = P(C|M)P(M) + P(C|F)P(F) = (0.05 * 0.60) + (0.0025 * 0.40) = 0.03 + 0.001 = 0.031.",
+    "level": "L2",
+    "topic": "Probability"
+  },
+  {
+    "question": "Let X and Y be two independent random variables. Given E[X]=5, Var(X)=2, E[Y]=3, and Var(Y)=4. What are E[2X - 3Y + 1] and Var(2X - 3Y + 1)?",
+    "options": [
+      "E[2X - 3Y + 1] = 2 and Var(2X - 3Y + 1) = 44",
+      "E[2X - 3Y + 1] = 2 and Var(2X - 3Y + 1) = -28",
+      "E[2X - 3Y + 1] = 2 and Var(2X - 3Y + 1) = 14",
+      "E[2X - 3Y + 1] = 12 and Var(2X - 3Y + 1) = 44"
+    ],
+    "answer": "E[2X - 3Y + 1] = 2 and Var(2X - 3Y + 1) = 44",
+    "explanation": "For expectation, E[aX + bY + c] = aE[X] + bE[Y] + c. So, E[2X - 3Y + 1] = 2E[X] - 3E[Y] + 1 = 2(5) - 3(3) + 1 = 10 - 9 + 1 = 2. For variance of independent random variables, Var(aX + bY + c) = a^2Var(X) + b^2Var(Y) (the constant c does not affect variance). So, Var(2X - 3Y + 1) = Var(2X) + Var(-3Y) = (2^2)Var(X) + (-3^2)Var(Y) = 4(2) + 9(4) = 8 + 36 = 44.",
+    "level": "L2",
+    "topic": "Probability"
+  }
+]
